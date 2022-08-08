@@ -1,0 +1,130 @@
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width cstm_collection_mega">
+  <h1 class="title title--primary">{{ section.settings.title | escape }}</h1>
+
+{%- if section.settings.menu != blank -%}  
+  <ul class="collection-list grid grid--1-col grid--3-col-tablet" role="list">
+     {%- for link in section.settings.menu.links -%}
+       {%- if link.links != blank -%}
+         {%- for childlink in link.links -%}
+            {%assign lnk_f = false %}
+            {%assign lk_s = link.links.size %}
+            {%assign lp = forloop.index %}
+            {%for block in section.blocks%}
+              {%if block.type == "mega_nav"%}
+                  {%assign meg_hndl = block.settings.meganav_trigger | handle %}
+                  {%assign chl_hndl = link.title | handle %}
+                  {%if meg_hndl == chl_hndl %}
+                   {%assign lnk_f = true %}
+                    {%- if childlink.links == blank -%}
+                        {% assign image_style = 'square' %}
+                        {% assign current_image = blank %}
+                        {% if childlink.object.featured_image != blank %}
+                          {% assign current_image = childlink.object.featured_image %}
+                        {% elsif childlink.object.image != blank %}
+                          {% assign current_image = childlink.object.image %}
+                        {% elsif childlink.type == 'collection_link' and childlink.object.products[0].images[0] %}
+                          {% assign current_image = childlink.object.products[0].images[0] %}
+                        {% endif %}
+                            {% unless current_image == blank %}
+                              {% if image_style == 'square' %}
+                              {% capture image_css %}padding-bottom: {{- 100 | divided_by: current_image.aspect_ratio -}}%;{% endcapture %}
+                              {% else %}
+                              {% assign image_css = blank %}
+                              {% endif %}
+                            {% endunless %}
+      <li class="collection-list__item grid__item" data-size="{{lk_s}}" data-lp="{{lp}}" block_id="{{block.id}}" sec_id="{{section.id}}">
+        <a href="{{ childlink.url }}" class="card animate-arrow card--media card--light-border" >
+          <div class="card--stretch card-colored color-background-1">
+            
+              <div>
+                <div class="media media--square media--hover-effect overflow-hidden" >
+{%- if current_image != blank -%}
+                  <img
+                    srcset="{%- if current_image.width >= 165 -%}{{ current_image | img_url: '165x' }} 165w,{%- endif -%}
+                      {%- if current_image.width >= 360 -%}{{ current_image | img_url: '360x' }} 360w,{%- endif -%}
+                      {%- if current_image.width >= 535 -%}{{ current_image | img_url: '535x' }} 535w,{%- endif -%}
+                      {%- if current_image.width >= 750 -%}{{ current_image | img_url: '750x' }} 750w,{%- endif -%}
+                      {%- if current_image.width >= 1000 -%}{{ current_image | img_url: '1000x' }} 1000w,{%- endif -%}
+                      {%- if current_image.width >= 1500 -%}{{ current_image | img_url: '1500x' }} 1500w,{%- endif -%}
+                      {{ current_image | img_url: 'master' }} {{ current_image.width }}w"
+                    src="{{ current_image | img_url: '1500x' }}"
+                    sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 3 }}px, (min-width: 750px) calc((100vw - 130px) / 3), calc(100vw - 30px)"
+                    alt="{{ childlink.title | escape }}"
+                    height="{{ current_image_image.height }}"
+                    width="{{ current_image.width }}"
+                    loading="lazy"
+                  >
+  {% else %}
+  <img srcset="//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 165w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 360w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 535w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 750w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 1000w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 1500w,//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418 2000w" src="//cdn.shopify.com/s/files/1/0285/5606/6948/files/pf-57f0236f--ContactUsHero-Edited.jpg?v=1646922418" sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 130px) / 3), calc(100vw - 30px)" alt="10mgCBD" height="2000" width="2000" loading="lazy">
+  {% endif %}
+                </div>
+              </div>
+              <div class="card__text card__text-spacing card__text-hover">
+                <div class="overlay-card"></div>
+                <h2 class="h3">{{- childlink.title -}}<span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span></h2>
+              </div>
+          </div>
+        </a>
+      </li>
+                      {%- endif -%}
+                    {%- endif -%}
+               {%- endif -%}
+              {%- endfor -%}
+           {%- endfor -%}
+         {%- endif -%}
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+</div>
+
+
+
+
+{% schema %}
+  {
+    "name": "Collections Megamenu",
+    "settings": [
+        {
+        "type": "link_list",
+        "id": "menu",
+        "default": "main-menu",
+        "label": "t:sections.header.settings.menu.label"
+        },
+        {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.main-list-collections.settings.title.label",
+      "default": "Collections"
+    }
+    ],
+    "blocks": [
+    {
+      "type": "mega_nav",
+      "name": "Mega nav",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Menu"
+        },
+        {
+          "type": "text",
+          "id": "meganav_trigger",
+          "label": "Menu navigation trigger",
+          "info": "Add the title of the menu that you want to turn into a mega-nav."
+        }
+      ]
+    }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
