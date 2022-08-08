@@ -1,0 +1,26 @@
+{
+  "name": "MegaMenu Collection",
+  "sections": {
+    "shop-by-strength": {
+      "type": "collections-mega",
+      "blocks": {
+        "8259af12-742e-497e-954d-04291eef94758": {
+          "type": "mega_nav",
+          "settings": {
+            "meganav_trigger": "Shop By Strength"
+          }
+        }
+      },
+      "block_order": [
+        "8259af12-742e-497e-954d-04291eef94758"
+      ],
+      "settings": {
+        "menu": "main-menu-2",
+        "title": "Shop By Strength"
+      }
+    }
+  },
+  "order": [
+    "shop-by-strength"
+  ]
+}
