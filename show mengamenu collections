@@ -1,3 +1,4 @@
+// Create main file as section and then below 2 add as css
 
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
